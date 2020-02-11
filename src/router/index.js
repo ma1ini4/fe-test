@@ -1,23 +1,45 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Login from "../views/auth/Login";
+import ReportsList from "../views/reports/ReportsList";
+import CreateReport from "../views/reports/CreateReport";
+import EditReport from "../views/reports/EditReport";
+import store from "../store";
 
 Vue.use(VueRouter);
+
+function requireAuth(to, from, next) {
+  console.log(store.getters.user);
+  store.getters.user
+    ? next()
+    : next({
+        name: "Login"
+      });
+}
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    name: "ReportsList",
+    component: ReportsList,
+    beforeEach: requireAuth
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+    path: "/create/reports-list",
+    name: "CreateReport",
+    component: CreateReport,
+    beforeEach: requireAuth
+  },
+  {
+    path: "/create/edit-report",
+    name: "EditReport",
+    component: EditReport,
+    beforeEach: requireAuth
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login
   }
 ];
 
